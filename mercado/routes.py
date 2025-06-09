@@ -10,22 +10,22 @@ def page_home():
 
 @app.route('/produtos')
 def page_produto():
-    itens = Item.query.all()
-    return render_template("produtos.html", itens=itens)
+    itens1 = Item.query.all()
+    return render_template("produtos.html", itens=itens1)
 
 @app.route('/cadastro', methods=['GET', 'POST'])
 def page_cadastro():
-    form = CadastroForm()
-    if form.validate_on_submit():
+    forms = CadastroForm()
+    if forms.validate_on_submit():
         usuario = User(
-            usuario = form.usuario.data,
-            email = form.email.data,
-            senha = form.senha1.data
+            usuario = forms.usuario.data,
+            email = forms.email.data,
+            senha = forms.senha1.data
         )
         db.session.add(usuario)
         db.session.commit()
         return redirect(url_for('page_produto'))
-    if form.errors != {}:
-        for err in form.errors.values():
+    if forms.errors != {}:
+        for err in forms.errors.values():
             flash(f"Erro ao cadastrar usuário {err}", category="danger")
-    return render_template("cadastro.html", form=form)
+    return render_template("cadastro.html", form=forms)
