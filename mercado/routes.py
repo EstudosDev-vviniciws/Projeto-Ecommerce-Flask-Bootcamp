@@ -1,8 +1,9 @@
 from mercado import app
 from flask import render_template, redirect, url_for, flash
 from mercado.models import Item, User
-from mercado.forms import CadastroForm
+from mercado.forms import CadastroForm, LoginForm
 from mercado import db
+from flask_login import login_user
 
 @app.route('/')
 def page_home():
@@ -20,7 +21,7 @@ def page_cadastro():
         usuario = User(
             usuario = forms.usuario.data,
             email = forms.email.data,
-            senha = forms.senha1.data
+            senhacrip = forms.senha1.data
         )
         db.session.add(usuario)
         db.session.commit()
@@ -29,3 +30,16 @@ def page_cadastro():
         for err in forms.errors.values():
             flash(f"Erro ao cadastrar usuário {err}", category="danger")
     return render_template("cadastro.html", form=forms)
+
+@app.route('/login', methods=['GET','POST'])
+def page_login():
+    forms = LoginForm()
+    if forms.validate_on_submit():
+        usuario_logado = User.query.filter_by(usuario=forms.usuario.data).first()
+        if usuario_logado and usuario_logado.converte_senha(senha_texto_claro = forms.senha.data):
+            login_user(usuario_logado)
+            flash(f'Sucesso! Seu login é : {usuario_logado.usuario}', category='success')
+            return redirect(url_for('page_produto'))
+        else:
+            flash(f'Usuário ou senha estão incorretos! Tente novamente.', category='danger')
+    return render_template('login.html', form = forms)
