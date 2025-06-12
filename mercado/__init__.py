@@ -11,5 +11,8 @@ app.config["SECRET_KEY"] = '14e213928bbca654b936b462'
 db.init_app(app)
 bcrypt = Bcrypt(app)
 login_manager.init_app(app)
+login_manager.login_view = "page_login"
+login_manager.login_message = "Por favor, realize o login"
+login_manager.login_message_category = "info"
 
 from mercado import routes
