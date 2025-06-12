@@ -3,13 +3,14 @@ from flask import render_template, redirect, url_for, flash
 from mercado.models import Item, User
 from mercado.forms import CadastroForm, LoginForm
 from mercado import db
-from flask_login import login_user
+from flask_login import login_user, logout_user, login_required
 
 @app.route('/')
 def page_home():
     return render_template("home.html")
 
 @app.route('/produtos')
+@login_required
 def page_produto():
     itens1 = Item.query.all()
     return render_template("produtos.html", itens=itens1)
@@ -43,3 +44,9 @@ def page_login():
         else:
             flash(f'Usuário ou senha estão incorretos! Tente novamente.', category='danger')
     return render_template('login.html', form = forms)
+
+@app.route('/logout')
+def page_logout():
+    logout_user()
+    flash("Você fez o logout", category="info")
+    return redirect(url_for('page_home'))
