@@ -5,33 +5,67 @@
 {% endblock %}
 
 {% block conteudo %}
-    <h2 style="text-align: center;">Produtos</h2>
-    <hr>
-    <table class="table table-hover table-dark table-bordered">
-      <thead>
-        <tr>
-          <th scope="col">ID</th>
-          <th scope="col">Nome</th>
-          <th scope="col">Cód Barra</th>
-          <th scope="col">Preço</th>
-          <th scope="col">Decrição</th>
-          <th scope="col">Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in itens %}
-        <tr>
-          <td>{{item.id}}</td>
-          <td>{{item.nome}}</td>
-          <td>{{item.cod_barra}}</td>
-          <td>{{item.preco}}</td>
-          <td>{{item.descricao}}</td>
-          <td>
-            <button class="btn btn-outline btn-info">Mais informações</button>
-            <button class="btn btn-outline btn-success">Comprar esse produto</button>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <div class="row" style="margin-top: 20px; margin-left: 20px;">
+      <div class="col-8">
+           <h2 style="text-align: center;">Produtos Disponíveis</h2>
+           <p style="text-align: center;">Clique em comprar o item caso tenha interesse</p>
+                <hr>
+                <table class="table table-hover table-dark table-bordered">
+                  <thead>
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">Nome</th>
+                      <th scope="col">Cód Barra</th>
+                      <th scope="col">Preço</th>
+                      <th scope="col">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in itens %}
+                    {% include 'includes/modal_produtos.html' %}
+                    <tr>
+                      <td>{{item.id}}</td>
+                      <td>{{item.nome}}</td>
+                      <td>{{item.cod_barra}}</td>
+                      <td>{{item.preco}}</td>
+                      <td>
+                        <button data-bs-toggle="modal" data-bs-target="#exampleModalInfo-{{item.id}}" class="btn btn-outline btn-info">Mais informações</button>
+                        <button data-bs-toggle="modal" data-bs-target="#exampleModalCompra-{{item.id}}" class="btn btn-outline btn-success">Comprar esse produto</button>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+      </div>
+      <div class="col-4">
+          <h2>Produtos Adquiridos</h2>
+          <p>Clique em devolver o item caso tenha interesse</p>
+          <hr>
+          <div class="row"> 
+          {% for dono_item in dono_itens %}
+              <div class="col-md-6">
+                  <div class="card text-white text-center bg-dark mb-3" style="width: 12rem;">
+                      <div class="card-body">
+                        <h5 class="card-title">{{ dono_item.nome }}</h5>
+                        <button
+                          style="margin-bottom: 10px; margin-top: 10px;"
+                          data-bs-toggle="modal"
+                          data-bs-target="#"
+                          class="btn btn-outline-danger"
+                          type="button"
+                        >
+                          Vender esse produto
+                        </button>
+                        <p>
+                          <strong>
+                            Esse produto custa R$ {{ dono_item.preco }}
+                          </strong>
+                        </p>
+                      </div>
+                    </div>
+              </div>
+          {% endfor %}
+          </div>
+      </div>
+    </div>
 {% endblock %}
